@@ -1,25 +1,8 @@
-# Hack Technology / Project Attempted
+# React + Vite
 
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## What you built? 
+Currently, two official plugins are available:
 
-TODO: Short description of what you attempted to build
-
-Include some screenshots.
-[How?](https://help.github.com/articles/about-readmes/#relative-links-and-image-paths-in-readme-files)
-
-## Who Did What?
-
-Tayeb Mohammadi
-
-## What you learned
-
-TODO: what worked / what didn't work
-
-## Authors
-
-TODO: list of authors
-
-## Acknowledgments
-
-TODO: cite any tutorials followed here
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh

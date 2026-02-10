@@ -1,0 +1,60 @@
+import GroupCard from './GroupCard'
+import GroupFilters from './GroupFilters'
+import EmptyState from '../shared/EmptyState'
+import { useFilteredGroups } from '../../hooks/useFilteredGroups'
+import { useNavigation } from '../../context/NavigationContext'
+import { PAGES } from '../../utils/constants'
+
+export default function GroupList() {
+  const filters = useFilteredGroups()
+  const { navigate } = useNavigation()
+
+  return (
+    <div className="space-y-6">
+      <div className="animate-fade-in">
+        <h2 className="font-serif text-3xl text-bark mb-1">Browse Groups</h2>
+        <p className="text-warm-gray-500 text-sm">
+          {filters.totalActive} active {filters.totalActive === 1 ? 'group' : 'groups'}
+        </p>
+      </div>
+
+      <GroupFilters {...filters} />
+
+      {filters.filtered.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {filters.filtered.map((group, i) => (
+            <GroupCard
+              key={group.id}
+              group={group}
+              className={`animate-fade-in-up stagger-${Math.min(i + 1, 5)}`}
+            />
+          ))}
+        </div>
+      ) : (
+        <EmptyState
+          icon={
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
+            </svg>
+          }
+          title={filters.activeFilterCount > 0 ? 'No matching groups' : 'No groups yet'}
+          description={
+            filters.activeFilterCount > 0
+              ? 'Try adjusting your filters or search terms'
+              : 'Be the first to create a group!'
+          }
+          action={
+            filters.activeFilterCount === 0 && (
+              <button
+                onClick={() => navigate(PAGES.CREATE_GROUP)}
+                className="px-5 py-2.5 rounded-xl bg-ember text-white font-semibold text-sm hover:bg-ember-light active:scale-[0.98] transition-all duration-150"
+              >
+                Create Group
+              </button>
+            )
+          }
+        />
+      )}
+    </div>
+  )
+}
