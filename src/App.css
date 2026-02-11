@@ -1,9 +1,9 @@
-/* App-specific animations — Tailwind handles the rest */
+/* ── Entry animations ──────────────────────── */
 
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(16px);
   }
   to {
     opacity: 1;
@@ -28,19 +28,119 @@
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp 0.4s ease-out both;
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.3s ease-out both;
+  animation: fadeIn 0.4s ease-out both;
 }
 
 .animate-slide-in-left {
   animation: slideInLeft 0.35s ease-out both;
 }
 
-.stagger-1 { animation-delay: 0.05s; }
-.stagger-2 { animation-delay: 0.1s; }
-.stagger-3 { animation-delay: 0.15s; }
-.stagger-4 { animation-delay: 0.2s; }
-.stagger-5 { animation-delay: 0.25s; }
+.stagger-1 { animation-delay: 0.06s; }
+.stagger-2 { animation-delay: 0.12s; }
+.stagger-3 { animation-delay: 0.18s; }
+.stagger-4 { animation-delay: 0.24s; }
+.stagger-5 { animation-delay: 0.30s; }
+
+/* ── Scroll background orbs ──────────────── */
+
+.scroll-orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* ── Orb breathing — gentle drift even without scrolling ── */
+
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(20px, -25px) scale(1.04); }
+  66% { transform: translate(-15px, 15px) scale(0.97); }
+}
+
+/* ── Floating particles ──────────────────── */
+
+@keyframes drift1 {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(35px, -45px); }
+  50% { transform: translate(-25px, -80px); }
+  75% { transform: translate(45px, -35px); }
+}
+
+@keyframes drift2 {
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(-40px, -50px); }
+  66% { transform: translate(30px, -65px); }
+}
+
+@keyframes drift3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(25px, -55px) scale(1.3); }
+}
+
+.floating-particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* ── Gradient accent line ────────────────── */
+
+.gradient-line {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(249, 115, 22, 0.5) 20%,
+    rgba(139, 92, 246, 0.4) 50%,
+    rgba(14, 165, 233, 0.35) 80%,
+    transparent 100%
+  );
+}
+
+/* ── Shimmer ─────────────────────────────── */
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(249, 115, 22, 0.08), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
+}
+
+/* ── Glow pulse for live indicators ──────── */
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.animate-glow-pulse {
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+/* ── Hover lift with warm glow ───────────── */
+
+.hover-lift {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(249, 115, 22, 0.15);
+}
+
+/* ── Glass morphism ──────────────────────── */
+
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}

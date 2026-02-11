@@ -4,18 +4,37 @@ import EmptyState from '../shared/EmptyState'
 import { useFilteredGroups } from '../../hooks/useFilteredGroups'
 import { useNavigation } from '../../context/NavigationContext'
 import { PAGES } from '../../utils/constants'
+import { useGroups } from '../../context/GroupsContext'
 
 export default function GroupList() {
   const filters = useFilteredGroups()
   const { navigate } = useNavigation()
+  const { groups } = useGroups()
+
+  const totalMembers = groups.reduce((total, group) => {
+    return total + group.memberIds.length
+  }, 0)
 
   return (
     <div className="space-y-6">
       <div className="animate-fade-in">
-        <h2 className="font-serif text-3xl text-bark mb-1">Browse Groups</h2>
-        <p className="text-warm-gray-500 text-sm">
-          {filters.totalActive} active {filters.totalActive === 1 ? 'group' : 'groups'}
-        </p>
+        <h2 className="font-serif text-3xl md:text-4xl mb-3 bg-gradient-to-r from-bark via-ember to-violet bg-clip-text text-transparent leading-tight">
+          Discover Your Community
+        </h2>
+        <div className="flex items-center gap-4 flex-wrap">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-glow-pulse" />
+            <span className="text-sm text-warm-gray-500">
+              <span className="font-semibold text-bark">{filters.totalActive}</span> active {filters.totalActive === 1 ? 'group' : 'groups'}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-ocean" />
+            <span className="text-sm text-warm-gray-500">
+              <span className="font-semibold text-bark">{totalMembers}</span> students connected
+            </span>
+          </div>
+        </div>
       </div>
 
       <GroupFilters {...filters} />
@@ -47,7 +66,7 @@ export default function GroupList() {
             filters.activeFilterCount === 0 && (
               <button
                 onClick={() => navigate(PAGES.CREATE_GROUP)}
-                className="px-5 py-2.5 rounded-xl bg-ember text-white font-semibold text-sm hover:bg-ember-light active:scale-[0.98] transition-all duration-150"
+                className="btn-primary"
               >
                 Create Group
               </button>

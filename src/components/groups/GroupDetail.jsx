@@ -93,16 +93,17 @@ export default function GroupDetail({ groupId }) {
         <p className="text-sm text-warm-gray-600 leading-relaxed mb-5">{group.description}</p>
 
         <div className="flex flex-wrap gap-2 mb-5">
-          <span className="tag bg-parchment text-warm-gray-600 border border-warm-gray-200/60">
+          <span className={`tag ${
+            group.meetingType === 'online'
+              ? 'bg-ocean/10 text-ocean border border-ocean/15'
+              : 'bg-violet/10 text-violet border border-violet/15'
+          }`}>
             {group.meetingType === 'online' ? 'Online' : 'In-Person'}
           </span>
-          <span className="tag bg-parchment text-warm-gray-600 border border-warm-gray-200/60">
-            {group.space === 'quiet' ? 'Quiet' : 'Loud'}
-          </span>
-          <span className={`tag border ${
+          <span className={`tag ${
             group.visibility === 'public'
-              ? 'bg-emerald-50 text-emerald-700 border-emerald-200/60'
-              : 'bg-amber-50 text-amber-700 border-amber-200/60'
+              ? 'bg-forest/10 text-forest border border-forest/15'
+              : 'bg-warm-gray-100 text-warm-gray-500 border border-warm-gray-200/60'
           }`}>
             {group.visibility === 'public' ? 'Public' : 'Private'}
           </span>

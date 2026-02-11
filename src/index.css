@@ -10,35 +10,59 @@
 
   body {
     @apply bg-cream text-bark font-sans;
-    background-image:
-      radial-gradient(ellipse at 20% 0%, rgba(194,65,12,0.03) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 100%, rgba(194,65,12,0.02) 0%, transparent 50%);
     min-height: 100vh;
   }
 
-  /* subtle noise texture overlay */
+  /* Subtle dot grid texture — adds depth */
   body::before {
     content: '';
     position: fixed;
     inset: 0;
-    opacity: 0.015;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-image: radial-gradient(circle, rgba(28, 25, 23, 0.045) 1px, transparent 1px);
+    background-size: 28px 28px;
     pointer-events: none;
-    z-index: 9999;
+    z-index: 1;
+  }
+
+  ::selection {
+    background: rgba(249, 115, 22, 0.15);
   }
 }
 
 @layer components {
   .tag {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium tracking-wide;
+    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium tracking-wide;
   }
 
   .card-base {
-    @apply bg-white/80 backdrop-blur-sm rounded-xl border border-warm-gray-200/60 shadow-card;
-    @apply transition-all duration-200 ease-out;
+    @apply bg-white/90 backdrop-blur-sm rounded-2xl border border-warm-gray-200/60;
+    @apply transition-all duration-500 ease-out;
+    box-shadow: 0 1px 3px rgba(28, 25, 23, 0.05), 0 4px 12px rgba(28, 25, 23, 0.03);
   }
 
   .card-base:hover {
-    @apply shadow-card-hover border-warm-gray-200;
+    border-color: rgba(249, 115, 22, 0.15);
+    box-shadow:
+      0 0 0 1px rgba(249, 115, 22, 0.06),
+      0 4px 20px rgba(249, 115, 22, 0.1),
+      0 8px 30px rgba(28, 25, 23, 0.06);
+    transform: translateY(-3px);
+  }
+
+  .btn-primary {
+    @apply px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200;
+    @apply bg-gradient-to-r from-ember to-ember-light text-white;
+    @apply hover:shadow-glow-orange active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200;
+    @apply bg-white border border-warm-gray-200 text-bark;
+    @apply hover:border-ember hover:text-ember active:scale-95;
+  }
+
+  .badge-vibrant {
+    @apply inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-semibold tracking-wide;
+    @apply bg-gradient-to-r shadow-sm;
   }
 }

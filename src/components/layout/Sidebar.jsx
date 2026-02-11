@@ -50,19 +50,22 @@ export default function Sidebar() {
             <button
               key={item.page}
               onClick={() => navigate(item.page)}
-              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150 group ${
+              className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 group relative ${
                 isActive
-                  ? 'bg-white text-bark shadow-card border border-warm-gray-200/60'
-                  : 'text-warm-gray-500 hover:text-bark hover:bg-parchment/60'
+                  ? 'bg-white/80 text-bark shadow-sm border border-warm-gray-200/60'
+                  : 'text-warm-gray-500 hover:text-bark hover:bg-white/40'
               }`}
             >
-              <span className={`transition-colors ${isActive ? 'text-ember' : 'text-warm-gray-400 group-hover:text-warm-gray-600'}`}>
+              {isActive && (
+                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-gradient-to-b from-ember to-violet" />
+              )}
+              <span className={`transition-colors duration-300 ${isActive ? 'text-ember' : 'text-warm-gray-400 group-hover:text-warm-gray-600'}`}>
                 <Icon />
               </span>
               <span>{item.label}</span>
               {item.count !== null && (
-                <span className={`ml-auto text-[10px] font-bold rounded-full px-1.5 py-0.5 ${
-                  isActive ? 'bg-parchment text-warm-gray-600' : 'bg-warm-gray-100 text-warm-gray-400'
+                <span className={`ml-auto text-[10px] font-bold rounded-full px-1.5 py-0.5 transition-colors duration-300 ${
+                  isActive ? 'bg-gradient-to-r from-ember/10 to-violet/10 text-ember' : 'bg-warm-gray-100 text-warm-gray-400'
                 }`}>
                   {item.count}
                 </span>
@@ -72,18 +75,20 @@ export default function Sidebar() {
         })}
 
         <div className="!mt-6 px-3">
-          <div className="h-px bg-warm-gray-200/60 mb-4" />
-          <div className="flex items-center gap-1.5 text-[10px] text-warm-gray-400 uppercase tracking-wider font-bold">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-            Stats
+          <div className="h-px bg-gradient-to-r from-warm-gray-200/60 via-warm-gray-200 to-warm-gray-200/60 mb-4" />
+          <div className="flex items-center gap-1.5 text-[10px] text-warm-gray-400 uppercase tracking-wider font-bold mb-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-glow-pulse" />
+            Live Stats
           </div>
-          <div className="mt-2 space-y-1">
-            <p className="text-xs text-warm-gray-500">
-              <span className="font-semibold text-bark">{activeGroups.length}</span> active groups
-            </p>
-            <p className="text-xs text-warm-gray-500">
-              <span className="font-semibold text-bark">{myGroups.length}</span> your groups
-            </p>
+          <div className="space-y-2">
+            <div className="flex justify-between items-center">
+              <p className="text-xs text-warm-gray-500">Active groups</p>
+              <p className="text-xs font-bold text-bark">{activeGroups.length}</p>
+            </div>
+            <div className="flex justify-between items-center">
+              <p className="text-xs text-warm-gray-500">Your groups</p>
+              <p className="text-xs font-bold text-bark">{myGroups.length}</p>
+            </div>
           </div>
         </div>
       </div>

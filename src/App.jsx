@@ -8,6 +8,7 @@ import GroupList from './components/groups/GroupList'
 import GroupForm from './components/groups/GroupForm'
 import GroupDetail from './components/groups/GroupDetail'
 import ProfilePage from './components/profile/ProfilePage'
+import { ToastProvider } from './components/shared/Toast'
 
 function AppContent() {
   const { page, params } = useNavigation()
@@ -30,12 +31,18 @@ export default function App() {
   const { currentUser } = useAuth()
 
   if (!currentUser || currentUser.verified === false) {
-    return <AuthPage />
+    return (
+      <ToastProvider>
+        <AuthPage />
+      </ToastProvider>
+    )
   }
 
   return (
-    <AppShell>
-      <AppContent />
-    </AppShell>
+    <ToastProvider>
+      <AppShell>
+        <AppContent />
+      </AppShell>
+    </ToastProvider>
   )
 }

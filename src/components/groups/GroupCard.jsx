@@ -5,10 +5,10 @@ import { PAGES, formatDateTimeRange } from '../../utils/constants'
 import CapacityBadge from './CapacityBadge'
 
 const BUTTON_STYLES = {
-  ember: 'bg-ember text-white hover:bg-ember-light',
-  green: 'bg-emerald-50 text-emerald-700 border border-emerald-200/60 hover:bg-emerald-100',
-  amber: 'bg-amber-50 text-amber-700 border border-amber-200/60',
-  bark: 'bg-bark text-cream hover:bg-warm-gray-800',
+  ember: 'bg-gradient-to-r from-ember to-ember-light text-white hover:shadow-glow-orange',
+  green: 'bg-gradient-to-r from-forest to-forest-light text-white hover:shadow-glow-green',
+  amber: 'bg-gradient-to-r from-amber-500 to-amber-400 text-white hover:shadow-lg',
+  bark: 'bg-gradient-to-r from-bark to-warm-gray-800 text-cream hover:shadow-lg',
   gray: 'bg-warm-gray-100 text-warm-gray-400 cursor-not-allowed',
 }
 
@@ -36,22 +36,22 @@ export default function GroupCard({ group, className = '' }) {
   return (
     <div
       onClick={() => navigate(PAGES.GROUP_DETAIL, { groupId: group.id })}
-      className={`card-base p-5 cursor-pointer group ${className}`}
+      className={`card-base p-6 cursor-pointer group ${className}`}
     >
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="min-w-0">
-          <h3 className="font-semibold text-bark leading-snug truncate group-hover:text-ember transition-colors">
+          <h3 className="font-serif text-lg text-bark leading-snug truncate group-hover:text-ember transition-colors duration-300">
             {group.name}
           </h3>
-          <p className="text-xs text-warm-gray-400 mt-0.5">{group.title}</p>
+          <p className="text-[11px] text-warm-gray-400 mt-0.5 font-medium tracking-wide">{group.title}</p>
         </div>
         <button
           onClick={onFavorite}
-          className="shrink-0 p-1 rounded-md hover:bg-parchment transition-colors"
+          className="shrink-0 p-1.5 rounded-lg hover:bg-parchment transition-all duration-200 hover:scale-110"
           aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
         >
           <svg
-            className={`w-4 h-4 transition-colors ${favorited ? 'text-ember fill-ember' : 'text-warm-gray-300 hover:text-warm-gray-400'}`}
+            className={`w-4 h-4 transition-all duration-300 ${favorited ? 'text-ember fill-ember' : 'text-warm-gray-300 hover:text-warm-gray-400'}`}
             viewBox="0 0 24 24"
             strokeWidth={1.8}
             stroke="currentColor"
@@ -62,40 +62,41 @@ export default function GroupCard({ group, className = '' }) {
         </button>
       </div>
 
-      <p className="text-sm text-warm-gray-500 leading-relaxed line-clamp-2 mb-3">
+      <p className="text-sm text-warm-gray-500 leading-relaxed line-clamp-2 mb-4">
         {group.description}
       </p>
 
       <div className="flex gap-1.5 flex-wrap mb-3">
-        <span className="tag bg-parchment text-warm-gray-600 border border-warm-gray-200/60">
+        <span className={`tag ${
+          group.meetingType === 'online'
+            ? 'bg-ocean/10 text-ocean border border-ocean/15'
+            : 'bg-violet/10 text-violet border border-violet/15'
+        }`}>
           {group.meetingType === 'online' ? 'Online' : 'In-Person'}
         </span>
-        <span className="tag bg-parchment text-warm-gray-600 border border-warm-gray-200/60">
-          {group.space === 'quiet' ? 'Quiet' : 'Loud'}
-        </span>
-        <span className={`tag border ${
+        <span className={`tag ${
           group.visibility === 'public'
-            ? 'bg-emerald-50 text-emerald-700 border-emerald-200/60'
-            : 'bg-amber-50 text-amber-700 border-amber-200/60'
+            ? 'bg-forest/10 text-forest border border-forest/15'
+            : 'bg-warm-gray-100 text-warm-gray-500 border border-warm-gray-200/60'
         }`}>
           {group.visibility === 'public' ? 'Public' : 'Private'}
         </span>
       </div>
 
       {group.dateTime && (
-        <p className="text-xs text-warm-gray-400 mb-3">
+        <p className="text-[11px] text-warm-gray-400 mb-3 font-medium">
           {formatDateTimeRange(group.dateTime, group.endDateTime)}
         </p>
       )}
 
-      <div className="mb-3">
+      <div className="mb-4">
         <CapacityBadge current={group.memberIds.length} max={group.capacity} />
       </div>
 
       <button
         onClick={onAction}
         disabled={actionState.disabled}
-        className={`w-full py-2 rounded-lg text-xs font-semibold tracking-wide transition-all duration-150 ${BUTTON_STYLES[actionState.style]} ${
+        className={`w-full py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all duration-200 ${BUTTON_STYLES[actionState.style]} ${
           actionState.disabled ? '' : 'active:scale-[0.98]'
         }`}
       >
