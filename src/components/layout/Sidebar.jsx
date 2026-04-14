@@ -32,14 +32,25 @@ export default function Sidebar() {
   )
 
   const items = [
-    { page: PAGES.BROWSE, label: 'Browse', icon: BrowseIcon, count: activeGroups.length },
+    { page: PAGES.BROWSE, label: 'Explore Groups', icon: BrowseIcon, count: activeGroups.length },
     { page: PAGES.CREATE_GROUP, label: 'Create Group', icon: CreateIcon, count: null },
     { page: PAGES.PROFILE, label: 'My Profile', icon: ProfileIcon, count: myGroups.length },
   ]
 
   return (
-    <nav className="w-56 shrink-0 pr-6 border-r border-warm-gray-200/60 hidden lg:block">
+    <nav className="w-64 shrink-0 pr-6 border-r border-warm-gray-200/70 hidden lg:block">
       <div className="space-y-1 sticky top-24">
+        <div className="mb-5 rounded-2xl border border-warm-gray-200/70 bg-white/90 p-4 shadow-sm">
+          <p className="text-[10px] font-bold text-warm-gray-500 uppercase tracking-[0.16em]">Campus Hub</p>
+          <h3 className="mt-2 text-lg font-semibold text-bark leading-tight">Dartmouth Community</h3>
+          <p className="mt-1 text-xs text-warm-gray-500">
+            Groups and events built around Dartmouth campus life.
+          </p>
+          <div className="mt-3 inline-flex items-center rounded-full bg-forest/10 px-2.5 py-1 text-[11px] font-semibold text-forest">
+            Hanover Campus Only
+          </div>
+        </div>
+
         <p className="text-[10px] font-bold text-warm-gray-400 uppercase tracking-[0.15em] mb-3 pl-3">
           Navigation
         </p>
@@ -78,7 +89,7 @@ export default function Sidebar() {
           <div className="h-px bg-gradient-to-r from-warm-gray-200/60 via-warm-gray-200 to-warm-gray-200/60 mb-4" />
           <div className="flex items-center gap-1.5 text-[10px] text-warm-gray-400 uppercase tracking-wider font-bold mb-3">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-glow-pulse" />
-            Live Stats
+            Campus Snapshot
           </div>
           <div className="space-y-2">
             <div className="flex justify-between items-center">
@@ -89,6 +100,15 @@ export default function Sidebar() {
               <p className="text-xs text-warm-gray-500">Your groups</p>
               <p className="text-xs font-bold text-bark">{myGroups.length}</p>
             </div>
+            <div className="flex justify-between items-center">
+              <p className="text-xs text-warm-gray-500">Campus area</p>
+              <p className="text-xs font-bold text-bark">Dartmouth</p>
+            </div>
+          </div>
+
+          <div className="mt-4 rounded-xl bg-parchment/80 p-3">
+            <p className="text-[11px] font-semibold text-bark">Popular spots this week</p>
+            <p className="mt-1 text-[11px] text-warm-gray-500">Baker-Berry, Collis, Thayer</p>
           </div>
         </div>
       </div>

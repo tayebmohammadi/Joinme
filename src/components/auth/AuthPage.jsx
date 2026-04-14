@@ -23,14 +23,14 @@ export default function AuthPage() {
   const needsVerification = currentUser && currentUser.verified === false
   const activeMode = needsVerification ? 'verify' : mode
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault()
     setError('')
     if (password !== confirmPassword) {
       setError('Passwords do not match')
       return
     }
-    const result = signup(email, displayName, password)
+    const result = await signup(email, displayName, password)
     if (result.error) {
       setError(result.error)
     } else {
@@ -39,34 +39,34 @@ export default function AuthPage() {
     }
   }
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault()
     setError('')
-    const result = login(email, password)
+    const result = await login(email, password)
     if (result.error) {
       setError(result.error)
     }
   }
 
-  const handleVerify = (e) => {
+  const handleVerify = async (e) => {
     e.preventDefault()
     setError('')
-    const result = verifyEmail(verifyCode)
+    const result = await verifyEmail(verifyCode)
     if (result.error) setError(result.error)
   }
 
-  const handleResend = () => {
+  const handleResend = async () => {
     setError('')
-    const result = resendVerification()
+    const result = await resendVerification()
     if (result.verificationCode) {
       setSentCode(result.verificationCode)
     }
   }
 
-  const handleForgot = (e) => {
+  const handleForgot = async (e) => {
     e.preventDefault()
     setError('')
-    const result = requestPasswordReset(forgotEmail)
+    const result = await requestPasswordReset(forgotEmail)
     if (result.error) {
       setError(result.error)
     } else {
@@ -75,10 +75,10 @@ export default function AuthPage() {
     }
   }
 
-  const handleReset = (e) => {
+  const handleReset = async (e) => {
     e.preventDefault()
     setError('')
-    const result = resetPassword(forgotEmail, resetCode, newPassword)
+    const result = await resetPassword(forgotEmail, resetCode, newPassword)
     if (result.error) {
       setError(result.error)
     } else {

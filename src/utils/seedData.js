@@ -1,3 +1,5 @@
+import { isCloudEnabled } from '../lib/cloud'
+
 const DEMO_OWNER = {
   id: 'user_demo_owner',
   email: 'demo.owner@dartmouth.edu',
@@ -197,6 +199,8 @@ export const SEED_GROUPS = [
 ]
 
 export function seedIfEmpty() {
+  if (isCloudEnabled) return
+
   const existingGroups = localStorage.getItem('joinme_groups')
   if (!existingGroups || JSON.parse(existingGroups).length === 0) {
     localStorage.setItem('joinme_groups', JSON.stringify(SEED_GROUPS))

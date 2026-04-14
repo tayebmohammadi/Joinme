@@ -1,7 +1,7 @@
 import { useGroups } from '../../context/GroupsContext'
 import { useAuth } from '../../context/AuthContext'
 import { useNavigation } from '../../context/NavigationContext'
-import { PAGES, formatDateTimeRange, getWaitlistCapacity, isGroupArchived } from '../../utils/constants'
+import { PAGES, formatDateTimeRange, getDefaultGroupVisual, getGroupVisualById, getWaitlistCapacity, isGroupArchived } from '../../utils/constants'
 import CapacityBadge from './CapacityBadge'
 import MemberList from './MemberList'
 import JoinRequestList from './JoinRequestList'
@@ -38,6 +38,7 @@ export default function GroupDetail({ groupId }) {
   const isOwner = group.ownerId === currentUser?.id
   const archived = isGroupArchived(group)
   const waitlistCap = getWaitlistCapacity(group.capacity)
+  const visual = getGroupVisualById(group.visualId) || getDefaultGroupVisual(group.name)
 
   const onAction = () => {
     if (actionState.action === 'manage') return
@@ -63,7 +64,15 @@ export default function GroupDetail({ groupId }) {
 
       <div className="card-base p-6 animate-fade-in-up">
         <div className="flex items-start justify-between gap-3 mb-4">
-          <div>
+          <div className="min-w-0">
+            <div
+              className="h-16 rounded-xl mb-3 border border-white/30 flex items-end px-3 py-2"
+              style={{ background: `linear-gradient(135deg, ${visual.colors[0]}, ${visual.colors[1]})` }}
+            >
+              <span className="text-[10px] font-bold tracking-[0.08em] text-white bg-black/15 px-2 py-1 rounded">
+                {visual.badge}
+              </span>
+            </div>
             <div className="flex items-center gap-2 mb-1">
               <h2 className="font-serif text-2xl text-bark">{group.name}</h2>
               {archived && (

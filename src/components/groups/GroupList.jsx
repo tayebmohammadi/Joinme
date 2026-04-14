@@ -18,26 +18,53 @@ export default function GroupList() {
   return (
     <div className="space-y-6">
       <div className="animate-fade-in">
-        <h2 className="font-serif text-3xl md:text-4xl mb-3 bg-gradient-to-r from-bark via-ember to-violet bg-clip-text text-transparent leading-tight">
-          Discover Your Community
-        </h2>
-        <div className="flex items-center gap-4 flex-wrap">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-glow-pulse" />
-            <span className="text-sm text-warm-gray-500">
-              <span className="font-semibold text-bark">{filters.totalActive}</span> active {filters.totalActive === 1 ? 'group' : 'groups'}
-            </span>
+        <div className="rounded-2xl border border-warm-gray-200/70 bg-white/90 p-5 md:p-6 shadow-sm">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.16em] font-bold text-warm-gray-400 mb-2">
+                Happening now at Dartmouth
+              </p>
+              <h2 className="font-serif text-3xl md:text-4xl text-bark leading-tight">
+                Find your campus people
+              </h2>
+              <p className="mt-2 text-sm text-warm-gray-500 max-w-2xl">
+                Join study circles, social meetups, and interest clubs around Dartmouth and campus spots.
+              </p>
+            </div>
+            <button
+              onClick={() => navigate(PAGES.CREATE_GROUP)}
+              className="btn-primary whitespace-nowrap"
+            >
+              Start a Group
+            </button>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-ocean" />
-            <span className="text-sm text-warm-gray-500">
-              <span className="font-semibold text-bark">{totalMembers}</span> students connected
+
+          <div className="mt-5 flex items-center gap-4 flex-wrap">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-glow-pulse" />
+              <span className="text-sm text-warm-gray-500">
+                <span className="font-semibold text-bark">{filters.totalActive}</span> active {filters.totalActive === 1 ? 'group' : 'groups'}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-ocean" />
+              <span className="text-sm text-warm-gray-500">
+                <span className="font-semibold text-bark">{totalMembers}</span> students connected
+              </span>
+            </div>
+            <span className="rounded-full border border-forest/20 bg-forest/10 px-3 py-1 text-[11px] font-semibold text-forest">
+              Dartmouth Campus Focus
             </span>
           </div>
         </div>
       </div>
 
       <GroupFilters {...filters} />
+      <div className="flex items-center justify-between">
+        <h3 className="text-sm font-semibold uppercase tracking-[0.14em] text-warm-gray-500">
+          Upcoming groups near Dartmouth campus
+        </h3>
+      </div>
 
       {filters.filtered.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

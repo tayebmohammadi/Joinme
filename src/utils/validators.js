@@ -1,3 +1,5 @@
+import { GROUP_VISUALS } from './constants'
+
 export function isDartmouthEmail(email) {
   if (!email || typeof email !== 'string') return false
   const trimmed = email.trim().toLowerCase()
@@ -33,16 +35,47 @@ export function validateGroupForm(data) {
     errors.space = 'Choose quiet or loud'
   }
 
-  if (!data.dateTime) {
-    errors.dateTime = 'Start date and time is required'
-  } else if (new Date(data.dateTime) < new Date()) {
-    errors.dateTime = 'Start must be in the future'
+  if (!GROUP_VISUALS.some((visual) => visual.id === data.visualId)) {
+    errors.visualId = 'Choose a logo style'
   }
 
-  if (!data.endDateTime) {
-    errors.endDateTime = 'End date and time is required'
-  } else if (data.dateTime && new Date(data.endDateTime) <= new Date(data.dateTime)) {
-    errors.endDateTime = 'End must be after start'
+  if (!data.meetingDate) {
+    errors.meetingDate = 'Meeting date is required'
+  }
+
+  if (!data.meetingTime) {
+    errors.meetingTime = 'Start time is required'
+  }
+
+  if (data.meetingDate && data.meetingTime) {
+    const start = new Date(`${data.meetingDate}T${data.meetingTime}`)
+    if (Number.isNaN(start.getTime())) {
+      errors.meetingTime = 'Choose a valid start date and time'
+    } else if (start < new Date(Date.now() - 60 * 1000)) {
+      errors.meetingTime = 'Start time cannot be in the past'
+    }
+  }
+
+  const durationMinutes = parseInt(data.durationMinutes, 10)
+  if (!durationMinutes || durationMinutes < 15 || durationMinutes % 15 !== 0) {
+    errors.durationMinutes = 'Duration must be in 15-minute increments'
+  }
+
+  if (!['none', 'daily', 'weekly', 'biweekly', 'custom-weekdays'].includes(data.recurrence)) {
+    errors.recurrence = 'Choose a valid repeat setting'
+  }
+
+  if (data.recurrence !== 'none') {
+    const recurrenceCount = parseInt(data.recurrenceCount, 10)
+    if (!recurrenceCount || recurrenceCount < 1 || recurrenceCount > 20) {
+      errors.recurrenceCount = 'Choose between 1 and 20 repeats'
+    }
+  }
+
+  if (data.recurrence === 'custom-weekdays') {
+    if (!Array.isArray(data.recurrenceWeekdays) || data.recurrenceWeekdays.length === 0) {
+      errors.recurrenceWeekdays = 'Pick at least one weekday'
+    }
   }
 
   return {
