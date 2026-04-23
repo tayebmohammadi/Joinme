@@ -8,6 +8,7 @@ import GroupList from './components/groups/GroupList'
 import GroupForm from './components/groups/GroupForm'
 import GroupDetail from './components/groups/GroupDetail'
 import ProfilePage from './components/profile/ProfilePage'
+import EventFeed from './components/events/EventFeed'
 import { ToastProvider } from './components/shared/Toast'
 
 function AppContent() {
@@ -22,6 +23,8 @@ function AppContent() {
       return <GroupDetail groupId={params.groupId} />
     case PAGES.PROFILE:
       return <ProfilePage />
+    case PAGES.EVENTS:
+      return <EventFeed />
     default:
       return <GroupList />
   }

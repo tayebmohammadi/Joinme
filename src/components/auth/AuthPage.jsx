@@ -153,7 +153,7 @@ export default function AuthPage() {
 
                 <button
                   type="submit"
-                  className="w-full py-3 rounded-xl bg-ember text-white font-semibold text-sm tracking-wide hover:bg-ember-light active:scale-[0.98] transition-all duration-150 shadow-sm hover:shadow-md"
+                  className="w-full py-3 rounded-full bg-ember text-ember-dark font-semibold text-sm tracking-wide hover:bg-ember-light hover:scale-[1.03] active:scale-[0.97] transition-all duration-150 shadow-ring"
                 >
                   Verify Email
                 </button>
@@ -199,7 +199,7 @@ export default function AuthPage() {
 
                 <button
                   type="submit"
-                  className="w-full py-3 rounded-xl bg-ember text-white font-semibold text-sm tracking-wide hover:bg-ember-light active:scale-[0.98] transition-all duration-150 shadow-sm hover:shadow-md"
+                  className="w-full py-3 rounded-full bg-ember text-ember-dark font-semibold text-sm tracking-wide hover:bg-ember-light hover:scale-[1.03] active:scale-[0.97] transition-all duration-150 shadow-ring"
                 >
                   Send Reset Code
                 </button>
@@ -267,7 +267,7 @@ export default function AuthPage() {
 
                 <button
                   type="submit"
-                  className="w-full py-3 rounded-xl bg-ember text-white font-semibold text-sm tracking-wide hover:bg-ember-light active:scale-[0.98] transition-all duration-150 shadow-sm hover:shadow-md"
+                  className="w-full py-3 rounded-full bg-ember text-ember-dark font-semibold text-sm tracking-wide hover:bg-ember-light hover:scale-[1.03] active:scale-[0.97] transition-all duration-150 shadow-ring"
                 >
                   Reset Password
                 </button>
@@ -372,7 +372,7 @@ export default function AuthPage() {
 
                 <button
                   type="submit"
-                  className="w-full py-3 rounded-xl bg-ember text-white font-semibold text-sm tracking-wide hover:bg-ember-light active:scale-[0.98] transition-all duration-150 shadow-sm hover:shadow-md"
+                  className="w-full py-3 rounded-full bg-ember text-ember-dark font-semibold text-sm tracking-wide hover:bg-ember-light hover:scale-[1.03] active:scale-[0.97] transition-all duration-150 shadow-ring"
                 >
                   {activeMode === 'login' ? 'Log In' : 'Create Account'}
                 </button>

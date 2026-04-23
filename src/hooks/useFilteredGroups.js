@@ -16,11 +16,12 @@ export function useFilteredGroups() {
 
   // Capture which groups the user was already a member of when browse first mounted.
   // Groups joined AFTER mount stay visible until next mount (page refresh / nav away & back).
+  // Groups you own are NEVER hidden from Browse.
   const initialMemberIds = useRef(null)
   if (initialMemberIds.current === null && currentUser) {
     initialMemberIds.current = new Set(
       groups
-        .filter(g => g.memberIds.includes(currentUser.id))
+        .filter(g => g.memberIds.includes(currentUser.id) && g.ownerId !== currentUser.id)
         .map(g => g.id)
     )
   }
@@ -41,9 +42,12 @@ export function useFilteredGroups() {
   const filtered = useMemo(() => {
     let result = activeGroups
 
-    // Hide groups the user was already in when they opened Browse
+    // Hide groups the user was already in when they opened Browse,
+    // but always keep groups they own visible.
     if (initialMemberIds.current && currentUser) {
-      result = result.filter(g => !initialMemberIds.current.has(g.id))
+      result = result.filter(
+        (g) => g.ownerId === currentUser.id || !initialMemberIds.current.has(g.id)
+      )
     }
 
     if (debouncedSearch) {

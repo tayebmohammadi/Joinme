@@ -5,9 +5,14 @@ export default function MemberList({ memberIds, ownerId, onRemove }) {
   const { users, currentUser } = useAuth()
   const isOwner = currentUser?.id === ownerId
 
-  const members = memberIds
-    .map(id => users.find(u => u.id === id))
-    .filter(Boolean)
+  const findUser = (id) => {
+    const fromList = users.find((u) => u.id === id)
+    if (fromList) return fromList
+    if (currentUser?.id === id) return currentUser
+    return { id, displayName: 'Unknown', email: '' }
+  }
+
+  const members = memberIds.map(findUser)
 
   if (members.length === 0) {
     return <p className="text-sm text-warm-gray-400">No members yet</p>
@@ -24,7 +29,7 @@ export default function MemberList({ memberIds, ownerId, onRemove }) {
             <p className="text-sm font-medium text-bark truncate">
               {member.displayName}
               {member.id === ownerId && (
-                <span className="ml-1.5 text-[10px] font-bold text-ember uppercase">Owner</span>
+                <span className="ml-1.5 text-[10px] font-bold text-ember-dark uppercase">Owner</span>
               )}
             </p>
             <p className="text-xs text-warm-gray-400 truncate">{member.email}</p>

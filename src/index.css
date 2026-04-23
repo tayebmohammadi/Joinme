@@ -8,61 +8,106 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  body {
-    @apply bg-cream text-bark font-sans;
-    min-height: 100vh;
+  /* Wise: enable contextual alternates everywhere. */
+  html, body, button, input, select, textarea {
+    font-feature-settings: "calt" 1, "ss01" 1;
   }
 
-  /* Subtle dot grid texture — adds depth */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: radial-gradient(circle, rgba(28, 25, 23, 0.045) 1px, transparent 1px);
-    background-size: 28px 28px;
-    pointer-events: none;
-    z-index: 1;
+  body {
+    @apply bg-cream text-bark font-sans;
+    font-weight: 600; /* Wise: Inter 600 as the body default. */
+    min-height: 100vh;
+    letter-spacing: -0.005em;
+  }
+
+  /* Wise display headings — billboard weight + ultra-tight leading. */
+  .font-serif,
+  h1, h2, h3 {
+    letter-spacing: -0.02em;
+  }
+
+  .font-serif {
+    font-weight: 900;
+    line-height: 0.92;
   }
 
   ::selection {
-    background: rgba(249, 115, 22, 0.15);
+    background: rgba(159, 232, 112, 0.35);
+    color: #163300;
   }
 }
 
 @layer components {
   .tag {
-    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium tracking-wide;
+    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold tracking-wide;
   }
 
+  /* Wise card: ring shadow, generous radius. */
   .card-base {
-    @apply bg-white/90 backdrop-blur-sm rounded-2xl border border-warm-gray-200/60;
-    @apply transition-all duration-500 ease-out;
-    box-shadow: 0 1px 3px rgba(28, 25, 23, 0.05), 0 4px 12px rgba(28, 25, 23, 0.03);
+    @apply bg-white rounded-[20px] border border-warm-gray-200/70;
+    box-shadow: rgba(14, 15, 12, 0.06) 0px 0px 0px 1px;
+    transition: box-shadow 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+                transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
   .card-base:hover {
-    border-color: rgba(249, 115, 22, 0.15);
-    box-shadow:
-      0 0 0 1px rgba(249, 115, 22, 0.06),
-      0 4px 20px rgba(249, 115, 22, 0.1),
-      0 8px 30px rgba(28, 25, 23, 0.06);
-    transform: translateY(-3px);
+    box-shadow: rgba(14, 15, 12, 0.18) 0px 0px 0px 1px;
+    transform: translateY(-2px);
   }
 
+  /* Wise primary CTA: lime-green pill, dark-green text, scale on hover. */
   .btn-primary {
-    @apply px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200;
-    @apply bg-gradient-to-r from-ember to-ember-light text-white;
-    @apply hover:shadow-glow-orange active:scale-95;
+    @apply inline-flex items-center justify-center px-5 py-2.5 rounded-full font-semibold text-sm;
+    background-color: #9fe870;
+    color: #163300;
+    transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
+                background-color 180ms ease;
   }
 
+  .btn-primary:hover {
+    background-color: #cdffad;
+    transform: scale(1.05);
+  }
+
+  .btn-primary:active {
+    transform: scale(0.97);
+  }
+
+  .btn-primary:disabled {
+    background-color: #e8ebe6;
+    color: #868685;
+    transform: none;
+    cursor: not-allowed;
+  }
+
+  /* Subtle pill (secondary action). */
   .btn-secondary {
-    @apply px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200;
-    @apply bg-white border border-warm-gray-200 text-bark;
-    @apply hover:border-ember hover:text-ember active:scale-95;
+    @apply inline-flex items-center justify-center px-5 py-2.5 rounded-full font-semibold text-sm;
+    background-color: rgba(22, 51, 0, 0.08);
+    color: #0e0f0c;
+    transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
+                background-color 180ms ease;
+  }
+
+  .btn-secondary:hover {
+    background-color: rgba(22, 51, 0, 0.14);
+    transform: scale(1.04);
+  }
+
+  .btn-secondary:active {
+    transform: scale(0.97);
   }
 
   .badge-vibrant {
-    @apply inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-semibold tracking-wide;
-    @apply bg-gradient-to-r shadow-sm;
+    @apply inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-semibold tracking-widest;
+    background-color: #e2f6d5;
+    color: #163300;
   }
+
+  /* Wise scale-press affordance for any button-like control. */
+  .press {
+    transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .press:hover  { transform: scale(1.04); }
+  .press:active { transform: scale(0.97); }
 }

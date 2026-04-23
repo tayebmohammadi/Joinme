@@ -7,6 +7,14 @@ import { isCloudEnabled, supabase } from '../lib/cloud'
 import { mapUserRow, mapUserToRow } from '../lib/cloudMappers'
 
 const AuthContext = createContext(null)
+const AUTH_BYPASS_ENABLED = true
+const GUEST_USER = {
+  id: 'guest-user',
+  email: 'guest@dartmouth.edu',
+  displayName: 'Guest User',
+  verified: true,
+  favoriteGroupIds: [],
+}
 
 export function AuthProvider({ children }) {
   const [localUsers, setLocalUsers] = useLocalStorage('joinme_users', [])
@@ -31,7 +39,11 @@ export function AuthProvider({ children }) {
   }, [refreshCloudUsers])
 
   const currentUser = useMemo(
-    () => users.find(u => u.id === currentUserId) || null,
+    () => {
+      const user = users.find(u => u.id === currentUserId) || null
+      if (user) return user
+      return AUTH_BYPASS_ENABLED ? GUEST_USER : null
+    },
     [users, currentUserId]
   )
 

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import { useGroups } from '../../context/GroupsContext'
 import { useNavigation } from '../../context/NavigationContext'
@@ -11,8 +11,15 @@ const TABS = ['Active', 'Archived', 'Favorites']
 export default function ProfilePage() {
   const { currentUser } = useAuth()
   const { groups } = useGroups()
-  const { navigate } = useNavigation()
-  const [tab, setTab] = useState('Active')
+  const { navigate, params } = useNavigation()
+  const initialTab = TABS.includes(params?.tab) ? params.tab : 'Active'
+  const [tab, setTab] = useState(initialTab)
+
+  useEffect(() => {
+    if (TABS.includes(params?.tab)) {
+      setTab(params.tab)
+    }
+  }, [params?.tab])
 
   const myGroups = useMemo(() =>
     groups.filter(g => g.memberIds.includes(currentUser?.id) || g.ownerId === currentUser?.id),
@@ -93,7 +100,7 @@ export default function ProfilePage() {
             tab !== 'Archived' && (
               <button
                 onClick={() => navigate(PAGES.BROWSE)}
-                className="px-5 py-2.5 rounded-xl bg-ember text-white font-semibold text-sm hover:bg-ember-light active:scale-[0.98] transition-all duration-150"
+                className="px-5 py-2.5 rounded-full bg-ember text-ember-dark font-semibold text-sm hover:bg-ember-light hover:scale-[1.03] active:scale-[0.97] transition-all duration-150 shadow-ring"
               >
                 Browse Groups
               </button>

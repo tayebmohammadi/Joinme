@@ -47,7 +47,7 @@ export default function GroupFilters({
             type="checkbox"
             checked={hasOpenSpots}
             onChange={(e) => setHasOpenSpots(e.target.checked)}
-            className="rounded border-warm-gray-300 text-ember focus:ring-ember/20"
+            className="rounded border-warm-gray-300 text-ember-dark focus:ring-ember-dark/20"
           />
           Open spots
         </label>
@@ -55,7 +55,7 @@ export default function GroupFilters({
         {activeFilterCount > 0 && (
           <button
             onClick={clearAll}
-            className="text-xs font-semibold text-ember hover:text-ember-dark transition-colors ml-auto"
+            className="text-xs font-semibold text-ember-dark hover:text-wise-positive transition-colors ml-auto"
           >
             Clear all ({activeFilterCount})
           </button>

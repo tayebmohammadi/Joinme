@@ -9,9 +9,7 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-warm-gray-200/60 shadow-sm">
-      {/* Gradient accent line */}
-      <div className="absolute bottom-0 left-0 right-0 h-[2px] gradient-line" />
+    <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-warm-gray-200 shadow-sm">
 
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -19,16 +17,16 @@ export default function Header() {
             onClick={() => navigate(PAGES.BROWSE)}
             className="flex items-center gap-2 group"
           >
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-ember to-violet flex items-center justify-center group-hover:shadow-glow-orange transition-all duration-300 group-hover:scale-105">
+            <div className="w-9 h-9 rounded-xl bg-ember flex items-center justify-center transition-all duration-300">
               <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
               </svg>
             </div>
-            <span className="font-serif text-xl text-bark leading-none group-hover:text-ember transition-colors duration-300">
+            <span className="font-bold tracking-tight text-xl text-bark leading-none group-hover:text-ember transition-colors duration-300">
               Joinme
             </span>
           </button>
-          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-gradient-to-r from-ember to-violet text-white tracking-[0.1em] uppercase shadow-sm hidden sm:inline-flex">
+          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#00693E]/10 text-[#00693E] tracking-widest uppercase shadow-sm hidden sm:inline-flex">
             Dartmouth
           </span>
         </div>
@@ -36,10 +34,10 @@ export default function Header() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(PAGES.CREATE_GROUP)}
-            className={`px-4 py-2 rounded-xl text-sm font-bold tracking-wide transition-all duration-200 ${
+            className={`px-4 py-2 rounded-xl text-sm font-semibold tracking-wide transition-all duration-200 ${
               page === PAGES.CREATE_GROUP
-                ? 'bg-gradient-to-r from-ember to-ember-light text-white shadow-glow-orange'
-                : 'bg-white border border-warm-gray-200 text-bark hover:border-ember hover:text-ember hover:shadow-md active:scale-95'
+                ? 'bg-ember text-white shadow-sm'
+                : 'bg-white border border-warm-gray-200 text-bark hover:bg-gray-50 active:scale-95'
             }`}
           >
             + New Group
