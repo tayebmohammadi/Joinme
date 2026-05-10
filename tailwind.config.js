@@ -88,12 +88,48 @@ export default {
       animation: {
         'bounce-slow': 'bounce 2s infinite',
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'float': 'float 3s ease-in-out infinite',
+        float: 'float 3s ease-in-out infinite',
+        'landing-aurora': 'landingAurora 22s ease-in-out infinite',
+        'landing-blob-1': 'landingBlobA 26s ease-in-out infinite',
+        'landing-blob-2': 'landingBlobB 32s ease-in-out infinite',
+        'landing-blob-3': 'landingBlobC 20s ease-in-out infinite',
+        'landing-blob-4': 'landingBlobD 24s ease-in-out infinite',
+        'landing-drift': 'landingDrift 80s linear infinite',
+        'landing-twinkle': 'landingTwinkle 4s ease-in-out infinite',
       },
       keyframes: {
         float: {
           '0%, 100%': { transform: 'translateY(0px)' },
           '50%': { transform: 'translateY(-10px)' },
+        },
+        landingAurora: {
+          '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
+          '33%': { transform: 'translate(2%, -3%) scale(1.03)' },
+          '66%': { transform: 'translate(-2%, 2%) scale(0.98)' },
+        },
+        landingBlobA: {
+          '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
+          '50%': { transform: 'translate(40px, -35px) scale(1.08)' },
+        },
+        landingBlobB: {
+          '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
+          '50%': { transform: 'translate(-50px, 30px) scale(1.05)' },
+        },
+        landingBlobC: {
+          '0%, 100%': { transform: 'translate(0, 0)' },
+          '50%': { transform: 'translate(25px, 40px)' },
+        },
+        landingBlobD: {
+          '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
+          '50%': { transform: 'translate(-30px, -20px) scale(1.12)' },
+        },
+        landingDrift: {
+          '0%': { transform: 'translate(0, 0)' },
+          '100%': { transform: 'translate(-3%, -2%)' },
+        },
+        landingTwinkle: {
+          '0%, 100%': { opacity: '0.25', transform: 'scale(1)' },
+          '50%': { opacity: '0.9', transform: 'scale(1.3)' },
         },
       },
     },

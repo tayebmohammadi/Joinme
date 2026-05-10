@@ -24,6 +24,18 @@ export const CAMPUS_LOCATIONS = [
   'Tuck School of Business',
 ]
 
+/** Select value for “Other”; stored `meetingDetail` stays human text only. */
+export const CAMPUS_LOCATION_OTHER = '__other__'
+
+/** Combine preset campus place + optional specifics (room, floor, landmark) for storage. */
+export function composeCampusMeetingDetail(preset, notesRaw) {
+  const notes = (notesRaw ?? '').trim()
+  if (!preset) return ''
+  if (preset === CAMPUS_LOCATION_OTHER) return notes
+  if (notes) return `${preset} · ${notes}`
+  return preset
+}
+
 export const MEETING_TYPES = [
   { value: 'online', label: 'Online' },
   { value: 'in-person', label: 'In-Person' },

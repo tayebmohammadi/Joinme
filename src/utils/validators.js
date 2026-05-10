@@ -1,9 +1,27 @@
-import { GROUP_VISUALS } from './constants'
+import {
+  GROUP_VISUALS,
+  CAMPUS_LOCATION_OTHER,
+  composeCampusMeetingDetail,
+} from './constants'
 
 export function isDartmouthEmail(email) {
   if (!email || typeof email !== 'string') return false
   const trimmed = email.trim().toLowerCase()
   return /^[^\s@]+@dartmouth\.edu$/.test(trimmed)
+}
+
+/** Google / OIDC sometimes puts email only on metadata or identities — not on user.email. */
+export function getAuthEmail(user) {
+  if (!user) return ''
+  const direct = user.email?.trim().toLowerCase()
+  if (direct) return direct
+  const meta = user.user_metadata?.email?.trim().toLowerCase()
+  if (meta) return meta
+  for (const row of user.identities || []) {
+    const idEmail = row?.identity_data?.email?.trim().toLowerCase()
+    if (idEmail) return idEmail
+  }
+  return ''
 }
 
 export function validateGroupForm(data) {
@@ -25,10 +43,25 @@ export function validateGroupForm(data) {
     errors.meetingType = 'Choose online or in-person'
   }
 
-  if (!data.meetingDetail?.trim()) {
-    errors.meetingDetail = data.meetingType === 'online'
-      ? 'Meeting URL is required'
-      : 'Location is required'
+  if (data.meetingType === 'online') {
+    if (!data.meetingDetail?.trim()) {
+      errors.meetingDetail = 'Meeting URL is required'
+    }
+  } else {
+    if (!data.campusLocationPreset) {
+      errors.campusLocationPreset = 'Pick a campus location'
+    } else if (data.campusLocationPreset === CAMPUS_LOCATION_OTHER) {
+      if (!(data.campusLocationNotes ?? '').trim()) {
+        errors.campusLocationNotes = 'Describe where you are meeting'
+      }
+    }
+    const composed = composeCampusMeetingDetail(
+      data.campusLocationPreset,
+      data.campusLocationNotes
+    )
+    if (!composed.trim() && !errors.campusLocationPreset && !errors.campusLocationNotes) {
+      errors.meetingDetail = 'Location is required'
+    }
   }
 
   if (!['quiet', 'loud'].includes(data.space)) {

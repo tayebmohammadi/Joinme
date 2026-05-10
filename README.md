@@ -27,7 +27,21 @@ cp .env.example .env
 
 In Supabase SQL Editor, run `supabase-schema.sql`.
 
-### 3) Restart app
+### 3) Google sign-in (Dartmouth-only)
+
+Production sign-in uses **Supabase Auth** with **Google**, restricted in the app to **`@dartmouth.edu`** emails (non‑Dartmouth Google sessions are rejected and signed out immediately).
+
+In the Supabase dashboard:
+
+1. **Authentication → Providers → Google**: enable it and paste the **OAuth Client ID / secret** from [Google Cloud Console](https://console.cloud.google.com/) (Consent screen + OAuth “Web application” credentials).
+2. **Authentication → URL configuration**: under **Redirect URLs**, add  
+   `http://localhost:5173/**`  
+   and your production origin (e.g. `https://your-domain.com/**`).
+3. The Google picker uses **`hd=dartmouth.edu`** to bias Dartmouth Workspace accounts; the app **still verifies** `@dartmouth.edu` on every session — personal Gmail accounts cannot proceed.
+
+Without Google enabled in Supabase, “Continue with Google” will redirect to an error until the provider is configured.
+
+### 4) Restart app
 
 Restart `npm run dev` after adding env vars.
 

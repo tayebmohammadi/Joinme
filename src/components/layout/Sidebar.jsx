@@ -92,7 +92,7 @@ export default function Sidebar() {
   const { addToast } = useToast()
   const [collapsed, setCollapsed] = useLocalStorage('joinme_sidebar_collapsed', false)
 
-  const isGuest = !currentUser || currentUser.id === 'guest-user'
+  const isGuest = !currentUser
 
   const activeGroups = groups.filter((g) => !isGroupArchived(g))
   const myGroups = activeGroups.filter(
@@ -143,7 +143,7 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`shrink-0 h-screen flex flex-col bg-white border-r border-warm-gray-200/70 transition-[width] duration-200 ease-out ${
+      className={`relative z-10 shrink-0 h-screen flex flex-col bg-white/78 backdrop-blur-xl border-r border-white/50 shadow-[1px_0_0_rgba(14,15,12,0.06)] transition-[width] duration-200 ease-out ${
         collapsed ? 'w-[72px]' : 'w-[260px]'
       }`}
     >

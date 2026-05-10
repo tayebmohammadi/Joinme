@@ -3,10 +3,18 @@ import { useAuth } from '../../context/AuthContext'
 
 const inputClass = 'w-full px-3.5 py-2.5 rounded-lg bg-parchment/70 border border-warm-gray-200 text-sm text-bark placeholder:text-warm-gray-400 focus:outline-none focus:ring-2 focus:ring-ember/20 focus:border-ember/40 transition-all'
 
+/** Local-demo email + password flow (offline / no Supabase). Cloud deployments use Dartmouth Google on `PublicCloudHome`. */
 export default function AuthPage() {
-  const { signup, login, verifyEmail, resendVerification, requestPasswordReset, resetPassword, currentUser } = useAuth()
+  const {
+    signup,
+    login,
+    verifyEmail,
+    resendVerification,
+    requestPasswordReset,
+    resetPassword,
+    currentUser,
+  } = useAuth()
 
-  // mode: 'login' | 'signup' | 'verify' | 'forgot' | 'reset'
   const [mode, setMode] = useState('login')
   const [email, setEmail] = useState('')
   const [displayName, setDisplayName] = useState('')
@@ -19,7 +27,6 @@ export default function AuthPage() {
   const [sentCode, setSentCode] = useState('')
   const [forgotEmail, setForgotEmail] = useState('')
 
-  // If logged in but not verified, show verification screen
   const needsVerification = currentUser && currentUser.verified === false
   const activeMode = needsVerification ? 'verify' : mode
 
@@ -104,11 +111,10 @@ export default function AuthPage() {
       <div className="w-full max-w-sm animate-fade-in-up">
         <div className="text-center mb-8">
           <h1 className="font-serif text-4xl text-bark mb-2">Joinme</h1>
-          <p className="text-warm-gray-500 text-sm">Dartmouth Student Groups</p>
+          <p className="text-warm-gray-500 text-sm">Dartmouth Student Groups (local demo)</p>
         </div>
 
         <div className="card-base p-6">
-          {/* ─── Verification Screen ─── */}
           {activeMode === 'verify' && (
             <div className="animate-fade-in">
               <div className="text-center mb-5">
@@ -125,7 +131,8 @@ export default function AuthPage() {
 
               {sentCode && (
                 <div className="px-3 py-2 rounded-lg bg-amber-50 border border-amber-200/60 text-xs text-amber-700 mb-4 text-center">
-                  <span className="font-bold">Demo mode</span> — your code is: <span className="font-mono font-bold text-sm">{sentCode}</span>
+                  <span className="font-bold">Demo mode</span> — your code is:{' '}
+                  <span className="font-mono font-bold text-sm">{sentCode}</span>
                 </div>
               )}
 
@@ -169,7 +176,6 @@ export default function AuthPage() {
             </div>
           )}
 
-          {/* ─── Forgot Password Screen ─── */}
           {activeMode === 'forgot' && (
             <div className="animate-fade-in">
               <h3 className="font-serif text-xl text-bark mb-1 text-center">Reset Password</h3>
@@ -215,7 +221,6 @@ export default function AuthPage() {
             </div>
           )}
 
-          {/* ─── Reset Password Screen ─── */}
           {activeMode === 'reset' && (
             <div className="animate-fade-in">
               <h3 className="font-serif text-xl text-bark mb-1 text-center">Set New Password</h3>
@@ -225,7 +230,8 @@ export default function AuthPage() {
 
               {sentCode && (
                 <div className="px-3 py-2 rounded-lg bg-amber-50 border border-amber-200/60 text-xs text-amber-700 mb-4 text-center">
-                  <span className="font-bold">Demo mode</span> — your code is: <span className="font-mono font-bold text-sm">{sentCode}</span>
+                  <span className="font-bold">Demo mode</span> — your code is:{' '}
+                  <span className="font-mono font-bold text-sm">{sentCode}</span>
                 </div>
               )}
 
@@ -283,7 +289,6 @@ export default function AuthPage() {
             </div>
           )}
 
-          {/* ─── Login / Signup Screens ─── */}
           {(activeMode === 'login' || activeMode === 'signup') && (
             <>
               <div className="flex bg-parchment/80 border border-warm-gray-200/60 rounded-lg p-0.5 mb-6">
@@ -389,7 +394,7 @@ export default function AuthPage() {
               </form>
 
               <p className="text-center text-xs text-warm-gray-400 mt-4">
-                Only @dartmouth.edu emails accepted
+                Only @dartmouth.edu emails accepted • Data stays in this browser
               </p>
             </>
           )}

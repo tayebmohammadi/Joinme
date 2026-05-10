@@ -21,5 +21,12 @@ function isRealSupabaseConfig(url, key) {
 export const isCloudEnabled = isRealSupabaseConfig(supabaseUrl, supabaseAnonKey)
 
 export const supabase = isCloudEnabled
-  ? createClient(supabaseUrl, supabaseAnonKey)
+  ? createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      flowType: 'pkce',
+      detectSessionInUrl: true,
+      persistSession: true,
+      autoRefreshToken: true,
+    },
+  })
   : null

@@ -26,10 +26,14 @@ export function GroupsProvider({ children }) {
 
   useEffect(() => {
     if (!isCloudEnabled) return
+    if (!currentUser) {
+      setCloudGroups([])
+      return undefined
+    }
     refreshCloudGroups()
     const interval = setInterval(refreshCloudGroups, 4000)
     return () => clearInterval(interval)
-  }, [refreshCloudGroups])
+  }, [isCloudEnabled, currentUser?.id, refreshCloudGroups])
 
   const createGroup = useCallback((data) => {
     const startDate = new Date(`${data.meetingDate}T${data.meetingTime}`)

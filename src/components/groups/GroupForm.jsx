@@ -1,10 +1,12 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useGroups } from '../../context/GroupsContext'
 import { useNavigation } from '../../context/NavigationContext'
 import { validateGroupForm } from '../../utils/validators'
 import {
   PAGES,
   CAMPUS_LOCATIONS,
+  CAMPUS_LOCATION_OTHER,
+  composeCampusMeetingDetail,
   GROUP_VISUALS,
   GROUP_CATEGORIES,
   getVisualsByCategory,
@@ -68,10 +70,16 @@ const WEEKDAY_OPTIONS = [
 
 const CATEGORY_TABS = [{ id: 'all', label: 'All', emoji: '✨' }, ...GROUP_CATEGORIES]
 
+/** ~3 lines at `text-sm` + vertical padding — starting height. */
+const DESCRIPTION_MIN_PX = 92
+/** Avoid a sky-tall field; internal scroll beyond this. */
+const DESCRIPTION_MAX_PX = 480
+
 export default function GroupForm() {
   const { createGroup } = useGroups()
   const { navigate } = useNavigation()
   const [errors, setErrors] = useState({})
+  const descriptionRef = useRef(null)
 
   const initialRoundedNow = nextQuarterHour(new Date())
   const todayStr = toDateInputValue(new Date())
@@ -85,6 +93,8 @@ export default function GroupForm() {
     visibility: 'public',
     meetingType: 'in-person',
     meetingDetail: '',
+    campusLocationPreset: '',
+    campusLocationNotes: '',
     space: 'quiet',
     visualId: GROUP_VISUALS[0].id,
     meetingDate: toDateInputValue(initialRoundedNow),
@@ -133,6 +143,27 @@ export default function GroupForm() {
     }
   }, [form.meetingDate, todayValue])
 
+  const syncDescriptionHeight = useCallback(() => {
+    const el = descriptionRef.current
+    if (!el) return
+    el.style.height = 'auto'
+    el.style.overflowY = 'hidden'
+    const natural = el.scrollHeight
+    const cap = Math.min(DESCRIPTION_MAX_PX, Math.floor(window.innerHeight * 0.55))
+    const next = Math.min(Math.max(natural, DESCRIPTION_MIN_PX), cap)
+    el.style.height = `${next}px`
+    el.style.overflowY = natural > cap ? 'auto' : 'hidden'
+  }, [])
+
+  useEffect(() => {
+    syncDescriptionHeight()
+  }, [form.description, syncDescriptionHeight])
+
+  useEffect(() => {
+    window.addEventListener('resize', syncDescriptionHeight)
+    return () => window.removeEventListener('resize', syncDescriptionHeight)
+  }, [syncDescriptionHeight])
+
   const set = (field) => (e) => {
     setForm((prev) => ({ ...prev, [field]: e.target.value }))
     if (errors[field]) setErrors((prev) => ({ ...prev, [field]: undefined }))
@@ -169,7 +200,18 @@ export default function GroupForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    const { valid, errors: formErrors } = validateGroupForm(form)
+    const payload =
+      form.meetingType === 'in-person'
+        ? {
+            ...form,
+            meetingDetail: composeCampusMeetingDetail(
+              form.campusLocationPreset,
+              form.campusLocationNotes
+            ),
+          }
+        : form
+
+    const { valid, errors: formErrors } = validateGroupForm(payload)
     if (!valid) {
       setErrors(formErrors)
       // Scroll to first error nicely
@@ -177,7 +219,7 @@ export default function GroupForm() {
       firstError?.scrollIntoView({ behavior: 'smooth', block: 'center' })
       return
     }
-    const group = createGroup(form)
+    const group = createGroup(payload)
     navigate(PAGES.GROUP_DETAIL, { groupId: group.id })
   }
 
@@ -328,11 +370,12 @@ export default function GroupForm() {
             <div data-form-error={errors.description ? true : undefined}>
               <FormField label="Description" error={errors.description}>
                 <textarea
+                  ref={descriptionRef}
                   value={form.description}
                   onChange={set('description')}
-                  rows={3}
+                  rows={1}
                   placeholder="What's this group about?"
-                  className={`${inputClass} resize-none`}
+                  className={`${inputClass} resize-none min-h-[5.75rem] max-h-[min(30rem,55vh)] overflow-x-hidden leading-relaxed`}
                 />
               </FormField>
             </div>
@@ -384,8 +427,20 @@ export default function GroupForm() {
                         key={v}
                         type="button"
                         onClick={() => {
-                          setForm((prev) => ({ ...prev, meetingType: v, meetingDetail: '' }))
-                          setErrors((prev) => ({ ...prev, meetingType: undefined }))
+                          setForm((prev) => ({
+                            ...prev,
+                            meetingType: v,
+                            meetingDetail: '',
+                            campusLocationPreset: '',
+                            campusLocationNotes: '',
+                          }))
+                          setErrors((prev) => ({
+                            ...prev,
+                            meetingType: undefined,
+                            meetingDetail: undefined,
+                            campusLocationPreset: undefined,
+                            campusLocationNotes: undefined,
+                          }))
                         }}
                         className={toggleClass(form.meetingType === v)}
                       >
@@ -417,12 +472,9 @@ export default function GroupForm() {
               </div>
             </div>
 
-            <div data-form-error={errors.meetingDetail ? true : undefined}>
-              <FormField
-                label={form.meetingType === 'online' ? 'Meeting URL' : 'Campus Location'}
-                error={errors.meetingDetail}
-              >
-                {form.meetingType === 'online' ? (
+            {form.meetingType === 'online' ? (
+              <div data-form-error={errors.meetingDetail ? true : undefined}>
+                <FormField label="Meeting URL" error={errors.meetingDetail}>
                   <input
                     type="text"
                     value={form.meetingDetail}
@@ -430,18 +482,70 @@ export default function GroupForm() {
                     placeholder="https://zoom.us/…"
                     className={inputClass}
                   />
-                ) : (
-                  <select value={form.meetingDetail} onChange={set('meetingDetail')} className={inputClass}>
-                    <option value="">Select a location…</option>
-                    {CAMPUS_LOCATIONS.map((loc) => (
-                      <option key={loc} value={loc}>
-                        {loc}
-                      </option>
-                    ))}
-                  </select>
-                )}
-              </FormField>
-            </div>
+                </FormField>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div data-form-error={errors.campusLocationPreset ? true : undefined}>
+                  <FormField label="Campus location" error={errors.campusLocationPreset}>
+                    <select
+                      value={form.campusLocationPreset}
+                      onChange={(e) => {
+                        const v = e.target.value
+                        setForm((prev) => ({ ...prev, campusLocationPreset: v }))
+                        setErrors((prev) => ({
+                          ...prev,
+                          campusLocationPreset: undefined,
+                          campusLocationNotes: undefined,
+                          meetingDetail: undefined,
+                        }))
+                      }}
+                      className={inputClass}
+                    >
+                      <option value="">Select a building or area…</option>
+                      {CAMPUS_LOCATIONS.map((loc) => (
+                        <option key={loc} value={loc}>
+                          {loc}
+                        </option>
+                      ))}
+                      <option value={CAMPUS_LOCATION_OTHER}>Other (describe below)</option>
+                    </select>
+                  </FormField>
+                </div>
+                <div data-form-error={errors.campusLocationNotes ? true : undefined}>
+                  <FormField
+                    label={
+                      form.campusLocationPreset === CAMPUS_LOCATION_OTHER
+                        ? 'Where exactly?'
+                        : 'Room, floor, or specific spot'
+                    }
+                    error={errors.campusLocationNotes}
+                    hint={
+                      form.campusLocationPreset === CAMPUS_LOCATION_OTHER
+                        ? 'Building name, room, off-campus address, or any landmark — be specific.'
+                        : 'Optional for listed buildings. E.g. “4th floor Berry”, “study room 105”, “meet at the pillars”.'
+                    }
+                  >
+                    <input
+                      type="text"
+                      value={form.campusLocationNotes}
+                      onChange={(e) => {
+                        setForm((prev) => ({ ...prev, campusLocationNotes: e.target.value }))
+                        if (errors.campusLocationNotes) {
+                          setErrors((prev) => ({ ...prev, campusLocationNotes: undefined }))
+                        }
+                      }}
+                      placeholder={
+                        form.campusLocationPreset === CAMPUS_LOCATION_OTHER
+                          ? 'e.g., Sudikoff 123, café on Main Street, River cluster lounge…'
+                          : 'e.g., Room 201, stacks level 4, FoCo round table near window…'
+                      }
+                      className={inputClass}
+                    />
+                  </FormField>
+                </div>
+              </div>
+            )}
           </section>
 
           {/* Schedule */}
@@ -637,7 +741,10 @@ export default function GroupForm() {
                   <span className="truncate">
                     {form.meetingType === 'online'
                       ? form.meetingDetail || 'Online'
-                      : form.meetingDetail || 'Pick a campus location'}
+                      : composeCampusMeetingDetail(
+                          form.campusLocationPreset,
+                          form.campusLocationNotes
+                        ) || 'Pick a campus location'}
                   </span>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-warm-gray-600">

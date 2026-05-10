@@ -1,4 +1,5 @@
 import './App.css'
+import { isCloudEnabled } from './lib/cloud'
 import { useAuth } from './context/AuthContext'
 import { useNavigation } from './context/NavigationContext'
 import { PAGES } from './utils/constants'
@@ -10,8 +11,10 @@ import GroupDetail from './components/groups/GroupDetail'
 import ProfilePage from './components/profile/ProfilePage'
 import EventFeed from './components/events/EventFeed'
 import { ToastProvider } from './components/shared/Toast'
+import PublicCloudShell from './components/layout/PublicCloudShell'
+import PublicCloudContent from './components/public/PublicCloudContent'
 
-function AppContent() {
+function ProtectedAppContent() {
   const { page, params } = useNavigation()
 
   switch (page) {
@@ -31,9 +34,20 @@ function AppContent() {
 }
 
 export default function App() {
-  const { currentUser } = useAuth()
+  const { currentUser, cloudAuthBusy } = useAuth()
 
-  if (!currentUser || currentUser.verified === false) {
+  const dartmouthGateOpen = Boolean(currentUser && currentUser.verified !== false)
+
+  if (cloudAuthBusy) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-2 bg-[#fdfbf7] px-6">
+        <div className="h-9 w-9 rounded-full border-2 border-ember/30 border-t-ember animate-spin" aria-hidden />
+        <p className="text-sm text-warm-gray-600 font-medium">Checking your Dartmouth session…</p>
+      </div>
+    )
+  }
+
+  if (!dartmouthGateOpen && !isCloudEnabled) {
     return (
       <ToastProvider>
         <AuthPage />
@@ -41,10 +55,20 @@ export default function App() {
     )
   }
 
+  if (!dartmouthGateOpen && isCloudEnabled) {
+    return (
+      <ToastProvider>
+        <PublicCloudShell>
+          <PublicCloudContent />
+        </PublicCloudShell>
+      </ToastProvider>
+    )
+  }
+
   return (
     <ToastProvider>
       <AppShell>
-        <AppContent />
+        <ProtectedAppContent />
       </AppShell>
     </ToastProvider>
   )
