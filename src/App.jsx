@@ -11,6 +11,7 @@ import GroupDetail from './components/groups/GroupDetail'
 import ProfilePage from './components/profile/ProfilePage'
 import EventFeed from './components/events/EventFeed'
 import { ToastProvider } from './components/shared/Toast'
+import WaitlistPromotionNotifier from './components/shared/WaitlistPromotionNotifier'
 import PublicCloudShell from './components/layout/PublicCloudShell'
 import PublicCloudContent from './components/public/PublicCloudContent'
 
@@ -67,6 +68,7 @@ export default function App() {
 
   return (
     <ToastProvider>
+      <WaitlistPromotionNotifier />
       <AppShell>
         <ProtectedAppContent />
       </AppShell>

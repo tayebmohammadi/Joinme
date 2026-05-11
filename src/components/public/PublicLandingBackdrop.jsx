@@ -1,38 +1,58 @@
 import PublicLandingInteractiveCanvas from './PublicLandingInteractiveCanvas'
 
 /**
- * Full-bleed ambient motion for the public landing — CSS layers + interactive canvas graph.
- * Canvas uses window pointer listeners (no pointer-events) so the page stays clickable.
+ * Full-bleed ambient backdrop — CSS layers + graph canvas.
+ * @param {boolean} [stationaryGraph=false] — Signed-in app: same graph, frozen (no pointer / RAF); CSS blobs/aurora/motes also still.
  */
-export default function PublicLandingBackdrop() {
+export default function PublicLandingBackdrop({ stationaryGraph = false }) {
+  const still = stationaryGraph
+
+  const aurora = still
+    ? 'absolute -inset-[40%] opacity-[0.55] motion-reduce:opacity-40 !animate-none bg-[radial-gradient(ellipse_at_30%_20%,rgba(159,232,112,0.35)_0%,transparent_55%),radial-gradient(ellipse_at_70%_80%,rgba(255,209,26,0.12)_0%,transparent_45%),radial-gradient(ellipse_at_50%_50%,rgba(5,77,40,0.06)_0%,transparent_50%)]'
+    : 'absolute -inset-[40%] opacity-[0.55] motion-reduce:opacity-40 motion-reduce:animate-none animate-landing-aurora bg-[radial-gradient(ellipse_at_30%_20%,rgba(159,232,112,0.35)_0%,transparent_55%),radial-gradient(ellipse_at_70%_80%,rgba(255,209,26,0.12)_0%,transparent_45%),radial-gradient(ellipse_at_50%_50%,rgba(5,77,40,0.06)_0%,transparent_50%)]'
+
+  const b1 = still
+    ? 'absolute top-[8%] left-[5%] h-72 w-72 rounded-full bg-gradient-to-br from-ember/20 to-ember-light/5 blur-3xl !animate-none'
+    : 'absolute top-[8%] left-[5%] h-72 w-72 rounded-full bg-gradient-to-br from-ember/20 to-ember-light/5 blur-3xl motion-reduce:animate-none animate-landing-blob-1'
+  const b2 = still
+    ? 'absolute bottom-[12%] right-[8%] h-96 w-96 rounded-full bg-gradient-to-tl from-amber-200/25 to-ember/10 blur-3xl !animate-none'
+    : 'absolute bottom-[12%] right-[8%] h-96 w-96 rounded-full bg-gradient-to-tl from-amber-200/25 to-ember/10 blur-3xl motion-reduce:animate-none animate-landing-blob-2'
+  const b3 = still
+    ? 'absolute top-[40%] right-[15%] h-48 w-48 rounded-full bg-forest/10 blur-2xl !animate-none'
+    : 'absolute top-[40%] right-[15%] h-48 w-48 rounded-full bg-forest/10 blur-2xl motion-reduce:animate-none animate-landing-blob-3'
+  const b4 = still
+    ? 'absolute bottom-[35%] left-[20%] h-56 w-56 rounded-full bg-white/40 blur-2xl !animate-none'
+    : 'absolute bottom-[35%] left-[20%] h-56 w-56 rounded-full bg-white/40 blur-2xl motion-reduce:animate-none animate-landing-blob-4'
+
+  const drift = still
+    ? 'absolute inset-0 opacity-[0.35] motion-reduce:opacity-20 !animate-none'
+    : 'absolute inset-0 opacity-[0.35] motion-reduce:opacity-20 motion-reduce:animate-none animate-landing-drift'
+
+  const mote = still
+    ? 'absolute rounded-full bg-bark/15 motion-reduce:!animate-none motion-reduce:opacity-30 !animate-none'
+    : 'absolute rounded-full bg-bark/15 motion-reduce:!animate-none motion-reduce:opacity-30 animate-landing-twinkle'
+
   return (
     <div
       className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none"
       aria-hidden
     >
-      {/* Soft base wash */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#faf9f5] via-[#f3f1eb] to-[#ebe8e0]" />
 
-      {/* Slow-shifting color field */}
-      <div
-        className="absolute -inset-[40%] opacity-[0.55] motion-reduce:opacity-40 motion-reduce:animate-none animate-landing-aurora bg-[radial-gradient(ellipse_at_30%_20%,rgba(159,232,112,0.35)_0%,transparent_55%),radial-gradient(ellipse_at_70%_80%,rgba(255,209,26,0.12)_0%,transparent_45%),radial-gradient(ellipse_at_50%_50%,rgba(5,77,40,0.06)_0%,transparent_50%)]"
-      />
+      <div className={aurora} />
 
-      {/* Drifting “soap bubble” orbs — gentle, amusing */}
-      <div className="absolute top-[8%] left-[5%] h-72 w-72 rounded-full bg-gradient-to-br from-ember/20 to-ember-light/5 blur-3xl motion-reduce:animate-none animate-landing-blob-1" />
-      <div className="absolute bottom-[12%] right-[8%] h-96 w-96 rounded-full bg-gradient-to-tl from-amber-200/25 to-ember/10 blur-3xl motion-reduce:animate-none animate-landing-blob-2" />
-      <div className="absolute top-[40%] right-[15%] h-48 w-48 rounded-full bg-forest/10 blur-2xl motion-reduce:animate-none animate-landing-blob-3" />
-      <div className="absolute bottom-[35%] left-[20%] h-56 w-56 rounded-full bg-white/40 blur-2xl motion-reduce:animate-none animate-landing-blob-4" />
+      <div className={b1} />
+      <div className={b2} />
+      <div className={b3} />
+      <div className={b4} />
 
-      {/* Colorful graph shapes + edges — scatter / gather with pointer (above soft blobs) */}
-      <PublicLandingInteractiveCanvas />
+      <PublicLandingInteractiveCanvas stationary={stationaryGraph} />
 
-      {/* Tiny drifting motes — constellation feel */}
-      <div className="absolute inset-0 opacity-[0.35] motion-reduce:opacity-20 motion-reduce:animate-none animate-landing-drift">
+      <div className={drift}>
         {[...Array(12)].map((_, i) => (
           <span
             key={i}
-            className="absolute rounded-full bg-bark/15 motion-reduce:!animate-none motion-reduce:opacity-30 animate-landing-twinkle"
+            className={mote}
             style={{
               width: 3 + (i % 4),
               height: 3 + (i % 4),
@@ -45,7 +65,6 @@ export default function PublicLandingBackdrop() {
         ))}
       </div>
 
-      {/* Fine grain — stops flat “digital” feel */}
       <div
         className="absolute inset-0 opacity-[0.04] mix-blend-multiply"
         style={{

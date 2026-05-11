@@ -2,7 +2,7 @@ import { createContext, useContext, useCallback, useEffect, useMemo, useState } 
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { useAuth } from './AuthContext'
 import { generateId } from '../utils/ids'
-import { getWaitlistCapacity, getDefaultGroupVisual } from '../utils/constants'
+import { getWaitlistCapacity, getDefaultGroupVisual, promoteWaitlistIntoMembers } from '../utils/constants'
 import { isCloudEnabled, supabase } from '../lib/cloud'
 import { mapGroupRow, mapGroupToRow } from '../lib/cloudMappers'
 
@@ -164,16 +164,11 @@ export function GroupsProvider({ children }) {
     const nextGroups = groups.map(g => {
       if (g.id !== groupId) return g
       const newMemberIds = g.memberIds.filter(id => id !== currentUser.id)
-      const newWaitlistIds = [...g.waitlistIds]
-      // Auto-promote from waitlist
-      if (newMemberIds.length < g.capacity && newWaitlistIds.length > 0) {
-        const promoted = newWaitlistIds.shift()
-        newMemberIds.push(promoted)
-      }
+      const { memberIds, waitlistIds } = promoteWaitlistIntoMembers(newMemberIds, g.waitlistIds, g.capacity)
       return {
         ...g,
-        memberIds: newMemberIds,
-        waitlistIds: newWaitlistIds,
+        memberIds,
+        waitlistIds,
       }
     })
     if (isCloudEnabled) {
@@ -292,12 +287,8 @@ export function GroupsProvider({ children }) {
     const nextGroups = groups.map(g => {
       if (g.id !== groupId) return g
       const newMemberIds = g.memberIds.filter(id => id !== userId)
-      const newWaitlistIds = [...g.waitlistIds]
-      if (newMemberIds.length < g.capacity && newWaitlistIds.length > 0) {
-        const promoted = newWaitlistIds.shift()
-        newMemberIds.push(promoted)
-      }
-      return { ...g, memberIds: newMemberIds, waitlistIds: newWaitlistIds }
+      const { memberIds, waitlistIds } = promoteWaitlistIntoMembers(newMemberIds, g.waitlistIds, g.capacity)
+      return { ...g, memberIds, waitlistIds }
     })
     if (isCloudEnabled) {
       const next = nextGroups.find(g => g.id === groupId)

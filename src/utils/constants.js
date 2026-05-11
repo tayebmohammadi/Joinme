@@ -116,8 +116,21 @@ export function getDefaultGroupVisual(seed = '') {
   return GROUP_VISUALS[Math.abs(hash) % GROUP_VISUALS.length]
 }
 
+/** Max waitlist length = 150% of group capacity (e.g. capacity 10 → up to 15 on waitlist). */
 export function getWaitlistCapacity(groupCapacity) {
-  return Math.max(Math.ceil(groupCapacity * 0.1), 3)
+  const cap = Number(groupCapacity)
+  if (!Number.isFinite(cap) || cap < 1) return 2
+  return Math.ceil(cap * 1.5)
+}
+
+/** After spots open, pull people from the front of the waitlist until the group is full. */
+export function promoteWaitlistIntoMembers(memberIds, waitlistIds, capacity) {
+  const members = [...memberIds]
+  const waitlist = [...waitlistIds]
+  while (members.length < capacity && waitlist.length > 0) {
+    members.push(waitlist.shift())
+  }
+  return { memberIds: members, waitlistIds: waitlist }
 }
 
 export function isGroupArchived(group) {

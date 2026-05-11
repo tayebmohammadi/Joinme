@@ -478,7 +478,8 @@ export default function GroupDetail({ groupId }) {
                   </div>
                   <p className="text-sm font-semibold text-bark">Waitlist is empty</p>
                   <p className="text-xs text-warm-gray-500 mt-1">
-                    People will join the waitlist when your group fills up.
+                    When the group is full, people can join a waitlist (up to 150% of capacity — e.g. 15 for a group of 10).
+                    If members leave, the next people on the waitlist are added automatically and get an in-app notice.
                   </p>
                 </div>
               )}
